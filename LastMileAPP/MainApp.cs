@@ -151,71 +151,8 @@ namespace LastMileAPP
 
         private void btnExport_Click(object sender, EventArgs e)
         {
-            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            string templatePath = @"C:\Users\slaso\source\repos\LastMileAPP\LastMileAPP\CPINT.xlsx";
-            string savePath = Path.Combine(desktopPath, "Export_" + DateTime.Now.ToString("yyyyMMdd_HHmm") + ".xlsx");
+            ExportCP.ExportBasketToExcel(basketTable);
 
-            using (var wb = new XLWorkbook(templatePath))
-            {
-                var ws = wb.Worksheet(1); // Sheet1
-                int startRow = 15;
-                int counter = 1;
-
-                foreach (DataRow row in basketTable.Rows)
-                {
-                    int excelRow = startRow++;
-
-                    // B & C
-                    ws.Cell(excelRow, 2).Value = counter++;           // counter
-                    WriteCell(ws.Cell(excelRow, 3), row["produkt"]);  // product name
-
-                    // Remaining columns from D onward
-                    int col = 4;
-                    foreach (DataColumn c in basketTable.Columns)
-                    {
-                        if (c.ColumnName == "produkt" || c.ColumnName == "id" || c.ColumnName == "product_type_id")
-                            continue;
-
-                        WriteCell(ws.Cell(excelRow, col++), row[c.ColumnName]);
-                    }
-                }
-
-                wb.SaveAs(savePath);
-            }
-
-            MessageBox.Show("Export done:\n" + savePath);
         }
-
-        /// <summary>
-        /// Safely writes a DataRow value into a ClosedXML cell with the correct type.
-        /// Avoids CS0266 (object -> XLCellValue).
-        /// </summary>
-        private static void WriteCell(IXLCell cell, object value)
-        {
-            if (value == null || value == DBNull.Value)
-            {
-                cell.Value = string.Empty;
-                return;
-            }
-
-            switch (value)
-            {
-                case int i: cell.Value = i; break;
-                case long l: cell.Value = l; break;
-                case short s: cell.Value = s; break;
-                case byte b8: cell.Value = b8; break;
-                case decimal m: cell.Value = m; break;
-                case double d: cell.Value = d; break;
-                case float f: cell.Value = (double)f; break; // XL uses double for floats
-                case bool b: cell.Value = b; break;
-                case DateTime dt: cell.Value = dt; break;
-                case TimeSpan ts: cell.Value = ts; break;
-                case string str: cell.Value = str; break;
-                default: cell.Value = value.ToString(); break;
-            }
-        }
-
-
-
     }
 }
