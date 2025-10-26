@@ -50,6 +50,8 @@ namespace LastMileAPP
 
                 fullDataTable = DatabaseCon.RunQuery(sql);
                 dataGridDatabase.DataSource = fullDataTable;
+                dataGridDatabase.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+                dataGridDatabase.MultiSelect = false;
                 dataGridDatabase.RowHeadersVisible = false;
 
                 dataGridDatabase.ReadOnly = true;
@@ -75,7 +77,7 @@ namespace LastMileAPP
             var categoriesTable = DatabaseCon.GetCategories();
             FiltersTree.Build(treeViewCategories, categoriesTable);
 
-            
+
             filtersController = new FiltersController(treeViewCategories, dataGridDatabase, fullDataTable);
 
 
@@ -84,19 +86,20 @@ namespace LastMileAPP
 
             basketTable = BasketFunctions.InitializeBasketTable(fullDataTable);
             dataGridBasket.DataSource = basketTable;
+            dataGridBasket.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridBasket.MultiSelect = false;
             dataGridBasket.RowHeadersVisible = false;
 
-            if (dataGridBasket.Columns.Contains("id"))
-                dataGridBasket.Columns["id"].Visible = false;
-            if (dataGridBasket.Columns.Contains("product_type_id"))
-                dataGridBasket.Columns["product_type_id"].Visible = false;
+            BasketFunctions.HideColumns(dataGridBasket);
+
+
             foreach (DataGridViewColumn col in dataGridBasket.Columns)
                 col.ReadOnly = true;
 
 
             slideWidth = panel3.Width;
             panel3.Width = 0;
-            UpdateToggleButtonPosition();
+
 
             // Enable editing only for specific columns
             string[] editableCols = { "quantity", "koeficient_prace", "cena_prace", "koeficient_material", "nakup_materialu" };
@@ -192,52 +195,42 @@ namespace LastMileAPP
 
         private void sliderTimer_Tick(object sender, EventArgs e)
         {
-            if (isCollapsed)
+            int target = isCollapsed ? slideWidth : 0;
+            int distance = Math.Abs(panel3.Width - target);
+
+            // Bigger when far, smaller near the end
+            int step = Math.Max(6, distance / 6);
+
+            panel3.Width += isCollapsed ? step : -step;
+
+            if (distance <= step)
             {
-                panel3.Width += 25; // slide open
-                if (panel3.Width >= slideWidth)
-                {
-                    panel3.Width = slideWidth;
-                    sliderTimer.Stop();
-                    isCollapsed = false;
-                }
-            }
-            else
-            {
-                panel3.Width -= 25; // slide closed
-                if (panel3.Width <= 0)
-                {
-                    panel3.Width = 0;
-                    sliderTimer.Stop();
-                    isCollapsed = true;
-                }
+                panel3.Width = target;
+                sliderTimer.Stop();
+                isCollapsed = !isCollapsed;
+
+                // ===== RESUME LAYOUT HERE =====
+                panel3.ResumeLayout();
+                this.ResumeLayout();
             }
 
-            UpdateToggleButtonPosition();
+
         }
 
         private void btnToggleSlide_Click(object sender, EventArgs e)
         {
+            this.SuspendLayout();
+            panel3.SuspendLayout();
+
             sliderTimer.Start();
-            
+
         }
 
-        private void UpdateToggleButtonPosition()
-        {
-            const int offset = 3;
-            int newLeft = panel3.Width + offset;
 
-            if (newLeft < 0)
-            {
-                newLeft = 0;
-            }
-
-            btnToggleSlide.Left = newLeft;
-        }
 
         private void treeViewCategories_AfterCheck(object sender, TreeViewEventArgs e)
         {
-            
+
             // prevent infinite loop when checking children programmatically
             treeViewCategories.AfterCheck -= treeViewCategories_AfterCheck;
 
@@ -249,7 +242,7 @@ namespace LastMileAPP
                     e.Node.Collapse();
             }
 
-            // also check/uncheck all children automatically if you want
+            // also check/uncheck all children automatically if you want    
             foreach (TreeNode child in e.Node.Nodes)
             {
                 child.Checked = e.Node.Checked;
@@ -257,6 +250,32 @@ namespace LastMileAPP
 
             // reattach event
             treeViewCategories.AfterCheck += treeViewCategories_AfterCheck;
+        }
+
+        private void SKBasketButton_Click(object sender, EventArgs e)
+        {
+            basketTable.DefaultView.RowFilter = "hlavna_kategoria = 'SK'";
+        }
+
+        private void CCTVBasketButton_Click(object sender, EventArgs e)
+        {
+            basketTable.DefaultView.RowFilter = "hlavna_kategoria = 'CCTV'";
+        }
+
+        private void EZSBasketButton_Click(object sender, EventArgs e)
+        {
+            basketTable.DefaultView.RowFilter = "hlavna_kategoria = 'EZS'";
+        }
+
+        private void BasketVsetko_Click(object sender, EventArgs e)
+        {
+            basketTable.DefaultView.RowFilter = string.Empty;
+        }
+
+        private void btnSettings_Click(object sender, EventArgs e)
+        {
+            var settingsForm = new Settings(); 
+            settingsForm.Show();
         }
     }
 }

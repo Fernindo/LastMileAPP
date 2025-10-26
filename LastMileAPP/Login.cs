@@ -28,5 +28,10 @@ namespace LastMileAPP
                 MessageBox.Show("Wrong credentials");
             }
         }
+
+        private void Login_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

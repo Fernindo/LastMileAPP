@@ -31,12 +31,17 @@
             components = new System.ComponentModel.Container();
             splitContainer1 = new SplitContainer();
             nameSplit = new SplitContainer();
+            btnSettings = new Button();
             filterLabel = new Label();
             txtSearch = new TextBox();
             splitter1 = new Splitter();
             splitContainer3 = new SplitContainer();
             dataGridDatabase = new DataGridView();
             panel2 = new Panel();
+            BasketVsetko = new Button();
+            EZSBasketButton = new Button();
+            CCTVBasketButton = new Button();
+            SKBasketButton = new Button();
             btnToggleSlide = new Button();
             splitContainer2 = new SplitContainer();
             dataGridBasket = new DataGridView();
@@ -71,7 +76,7 @@
             // splitContainer1
             // 
             splitContainer1.Dock = DockStyle.Fill;
-            splitContainer1.Location = new Point(0, 0);
+            splitContainer1.Location = new Point(161, 0);
             splitContainer1.Name = "splitContainer1";
             splitContainer1.Orientation = Orientation.Horizontal;
             // 
@@ -82,8 +87,8 @@
             // splitContainer1.Panel2
             // 
             splitContainer1.Panel2.Controls.Add(splitContainer2);
-            splitContainer1.Size = new Size(800, 450);
-            splitContainer1.SplitterDistance = 239;
+            splitContainer1.Size = new Size(1188, 609);
+            splitContainer1.SplitterDistance = 323;
             splitContainer1.TabIndex = 0;
             splitContainer1.SplitterMoved += splitContainer1_SplitterMoved;
             // 
@@ -96,6 +101,7 @@
             // 
             // nameSplit.Panel1
             // 
+            nameSplit.Panel1.Controls.Add(btnSettings);
             nameSplit.Panel1.Controls.Add(filterLabel);
             nameSplit.Panel1.Controls.Add(txtSearch);
             nameSplit.Panel1.Controls.Add(splitter1);
@@ -103,9 +109,19 @@
             // nameSplit.Panel2
             // 
             nameSplit.Panel2.Controls.Add(splitContainer3);
-            nameSplit.Size = new Size(800, 239);
-            nameSplit.SplitterDistance = 30;
+            nameSplit.Size = new Size(1188, 323);
+            nameSplit.SplitterDistance = 40;
             nameSplit.TabIndex = 1;
+            // 
+            // btnSettings
+            // 
+            btnSettings.Location = new Point(1156, 5);
+            btnSettings.Name = "btnSettings";
+            btnSettings.Size = new Size(32, 23);
+            btnSettings.TabIndex = 3;
+            btnSettings.Text = "⚙";
+            btnSettings.UseVisualStyleBackColor = true;
+            btnSettings.Click += btnSettings_Click;
             // 
             // filterLabel
             // 
@@ -128,7 +144,7 @@
             // 
             splitter1.Location = new Point(0, 0);
             splitter1.Name = "splitter1";
-            splitter1.Size = new Size(3, 30);
+            splitter1.Size = new Size(3, 40);
             splitter1.TabIndex = 0;
             splitter1.TabStop = false;
             // 
@@ -146,8 +162,8 @@
             // splitContainer3.Panel2
             // 
             splitContainer3.Panel2.Controls.Add(panel2);
-            splitContainer3.Size = new Size(800, 205);
-            splitContainer3.SplitterDistance = 176;
+            splitContainer3.Size = new Size(1188, 279);
+            splitContainer3.SplitterDistance = 239;
             splitContainer3.TabIndex = 1;
             // 
             // dataGridDatabase
@@ -157,22 +173,66 @@
             dataGridDatabase.Location = new Point(0, 0);
             dataGridDatabase.Margin = new Padding(20);
             dataGridDatabase.Name = "dataGridDatabase";
-            dataGridDatabase.Size = new Size(800, 176);
+            dataGridDatabase.Size = new Size(1188, 239);
             dataGridDatabase.TabIndex = 0;
             dataGridDatabase.CellDoubleClick += dataGridDatabase_CellDoubleClick;
             // 
             // panel2
             // 
+            panel2.Controls.Add(BasketVsetko);
+            panel2.Controls.Add(EZSBasketButton);
+            panel2.Controls.Add(CCTVBasketButton);
+            panel2.Controls.Add(SKBasketButton);
             panel2.Controls.Add(btnToggleSlide);
             panel2.Dock = DockStyle.Fill;
             panel2.Location = new Point(0, 0);
             panel2.Name = "panel2";
-            panel2.Size = new Size(800, 25);
+            panel2.Size = new Size(1188, 36);
             panel2.TabIndex = 0;
+            // 
+            // BasketVsetko
+            // 
+            BasketVsetko.Location = new Point(39, -1);
+            BasketVsetko.Name = "BasketVsetko";
+            BasketVsetko.Size = new Size(75, 23);
+            BasketVsetko.TabIndex = 4;
+            BasketVsetko.Text = "Vsetko";
+            BasketVsetko.UseVisualStyleBackColor = true;
+            BasketVsetko.Click += BasketVsetko_Click;
+            // 
+            // EZSBasketButton
+            // 
+            EZSBasketButton.Location = new Point(282, -1);
+            EZSBasketButton.Name = "EZSBasketButton";
+            EZSBasketButton.Size = new Size(75, 23);
+            EZSBasketButton.TabIndex = 3;
+            EZSBasketButton.Text = "EZS";
+            EZSBasketButton.UseVisualStyleBackColor = true;
+            EZSBasketButton.Click += EZSBasketButton_Click;
+            // 
+            // CCTVBasketButton
+            // 
+            CCTVBasketButton.Location = new Point(201, -1);
+            CCTVBasketButton.Name = "CCTVBasketButton";
+            CCTVBasketButton.Size = new Size(75, 23);
+            CCTVBasketButton.TabIndex = 2;
+            CCTVBasketButton.Text = "CCTV";
+            CCTVBasketButton.UseVisualStyleBackColor = true;
+            CCTVBasketButton.Click += CCTVBasketButton_Click;
+            // 
+            // SKBasketButton
+            // 
+            SKBasketButton.Location = new Point(120, -1);
+            SKBasketButton.Name = "SKBasketButton";
+            SKBasketButton.Size = new Size(75, 23);
+            SKBasketButton.TabIndex = 1;
+            SKBasketButton.Text = "SK";
+            SKBasketButton.UseVisualStyleBackColor = true;
+            SKBasketButton.Click += SKBasketButton_Click;
             // 
             // btnToggleSlide
             // 
-            btnToggleSlide.Location = new Point(164, -1);
+            btnToggleSlide.Location = new Point(0, -1);
             btnToggleSlide.Name = "btnToggleSlide";
             btnToggleSlide.Size = new Size(33, 23);
             btnToggleSlide.TabIndex = 0;
@@ -194,8 +254,8 @@
             // splitContainer2.Panel2
             // 
             splitContainer2.Panel2.Controls.Add(panel1);
-            splitContainer2.Size = new Size(800, 207);
-            splitContainer2.SplitterDistance = 168;
+            splitContainer2.Size = new Size(1188, 282);
+            splitContainer2.SplitterDistance = 228;
             splitContainer2.TabIndex = 1;
             // 
             // dataGridBasket
@@ -204,7 +264,7 @@
             dataGridBasket.Dock = DockStyle.Fill;
             dataGridBasket.Location = new Point(0, 0);
             dataGridBasket.Name = "dataGridBasket";
-            dataGridBasket.Size = new Size(800, 168);
+            dataGridBasket.Size = new Size(1188, 228);
             dataGridBasket.TabIndex = 0;
             // 
             // panel1
@@ -213,7 +273,7 @@
             panel1.Dock = DockStyle.Fill;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(800, 35);
+            panel1.Size = new Size(1188, 50);
             panel1.TabIndex = 0;
             // 
             // btnExport
@@ -232,7 +292,7 @@
             panel3.Dock = DockStyle.Left;
             panel3.Location = new Point(0, 0);
             panel3.Name = "panel3";
-            panel3.Size = new Size(161, 450);
+            panel3.Size = new Size(161, 609);
             panel3.TabIndex = 2;
             // 
             // treeViewCategories
@@ -241,7 +301,7 @@
             treeViewCategories.Dock = DockStyle.Fill;
             treeViewCategories.Location = new Point(0, 0);
             treeViewCategories.Name = "treeViewCategories";
-            treeViewCategories.Size = new Size(161, 450);
+            treeViewCategories.Size = new Size(161, 609);
             treeViewCategories.TabIndex = 0;
             treeViewCategories.AfterCheck += treeViewCategories_AfterCheck;
             // 
@@ -254,7 +314,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(1349, 609);
             Controls.Add(splitContainer1);
             Controls.Add(panel3);
             Name = "MainApp";
@@ -304,5 +364,10 @@
         private Panel panel3;
         private System.Windows.Forms.Timer sliderTimer;
         private TreeView treeViewCategories;
+        private Button EZSBasketButton;
+        private Button CCTVBasketButton;
+        private Button SKBasketButton;
+        private Button BasketVsetko;
+        private Button btnSettings;
     }
 }

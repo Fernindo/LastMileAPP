@@ -40,6 +40,23 @@ namespace LastMileAPP
             row["praca_spolu"] = pracaSpolu;
             row["spolu"] = spolu;
         }
+
+        public static void HideColumns(DataGridView dataGridBasket)
+        {
+
+            if (dataGridBasket.Columns.Contains("id"))
+                dataGridBasket.Columns["id"].Visible = false;
+
+            if (dataGridBasket.Columns.Contains("product_type_id"))
+                dataGridBasket.Columns["product_type_id"].Visible = false;
+
+            // ---- add these ----
+            if (dataGridBasket.Columns.Contains("hlavna_kategoria"))
+                dataGridBasket.Columns["hlavna_kategoria"].Visible = false;
+
+            if (dataGridBasket.Columns.Contains("spolu"))
+                dataGridBasket.Columns["spolu"].Visible = false;
+        }
     }
 
     
