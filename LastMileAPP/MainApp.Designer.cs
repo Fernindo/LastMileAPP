@@ -37,11 +37,11 @@
             splitContainer3 = new SplitContainer();
             dataGridDatabase = new DataGridView();
             panel2 = new Panel();
+            btnToggleSlide = new Button();
             splitContainer2 = new SplitContainer();
             dataGridBasket = new DataGridView();
             panel1 = new Panel();
             btnExport = new Button();
-            btnToggleSlide = new Button();
             panel3 = new Panel();
             treeViewCategories = new TreeView();
             sliderTimer = new System.Windows.Forms.Timer(components);
@@ -170,6 +170,16 @@
             panel2.Size = new Size(800, 25);
             panel2.TabIndex = 0;
             // 
+            // btnToggleSlide
+            // 
+            btnToggleSlide.Location = new Point(164, -1);
+            btnToggleSlide.Name = "btnToggleSlide";
+            btnToggleSlide.Size = new Size(33, 23);
+            btnToggleSlide.TabIndex = 0;
+            btnToggleSlide.Text = ">>";
+            btnToggleSlide.UseVisualStyleBackColor = true;
+            btnToggleSlide.Click += btnToggleSlide_Click;
+            // 
             // splitContainer2
             // 
             splitContainer2.Dock = DockStyle.Fill;
@@ -216,16 +226,6 @@
             btnExport.UseVisualStyleBackColor = true;
             btnExport.Click += btnExport_Click;
             // 
-            // btnToggleSlide
-            // 
-            btnToggleSlide.Location = new Point(164, 0);
-            btnToggleSlide.Name = "btnToggleSlide";
-            btnToggleSlide.Size = new Size(33, 23);
-            btnToggleSlide.TabIndex = 0;
-            btnToggleSlide.Text = ">>";
-            btnToggleSlide.UseVisualStyleBackColor = true;
-            btnToggleSlide.Click += btnToggleSlide_Click;
-            // 
             // panel3
             // 
             panel3.Controls.Add(treeViewCategories);
@@ -238,15 +238,16 @@
             // treeViewCategories
             // 
             treeViewCategories.CheckBoxes = true;
+            treeViewCategories.Dock = DockStyle.Fill;
             treeViewCategories.Location = new Point(0, 0);
             treeViewCategories.Name = "treeViewCategories";
-            treeViewCategories.Size = new Size(158, 450);
+            treeViewCategories.Size = new Size(161, 450);
             treeViewCategories.TabIndex = 0;
             treeViewCategories.AfterCheck += treeViewCategories_AfterCheck;
             // 
             // sliderTimer
             // 
-            sliderTimer.Interval = 10;
+            sliderTimer.Interval = 15;
             sliderTimer.Tick += sliderTimer_Tick;
             // 
             // MainApp
@@ -254,8 +255,8 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(panel3);
             Controls.Add(splitContainer1);
+            Controls.Add(panel3);
             Name = "MainApp";
             Text = "MainApp";
             WindowState = FormWindowState.Maximized;

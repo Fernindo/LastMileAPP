@@ -14,6 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Reflection;
 
 
 namespace LastMileAPP
@@ -218,6 +219,7 @@ namespace LastMileAPP
         private void btnToggleSlide_Click(object sender, EventArgs e)
         {
             sliderTimer.Start();
+            
         }
 
         private void UpdateToggleButtonPosition()
