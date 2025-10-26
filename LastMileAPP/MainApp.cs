@@ -95,6 +95,7 @@ namespace LastMileAPP
 
             slideWidth = panel3.Width;
             panel3.Width = 0;
+            UpdateToggleButtonPosition();
 
             // Enable editing only for specific columns
             string[] editableCols = { "quantity", "koeficient_prace", "cena_prace", "koeficient_material", "nakup_materialu" };
@@ -195,6 +196,7 @@ namespace LastMileAPP
                 panel3.Width += 25; // slide open
                 if (panel3.Width >= slideWidth)
                 {
+                    panel3.Width = slideWidth;
                     sliderTimer.Stop();
                     isCollapsed = false;
                 }
@@ -204,15 +206,31 @@ namespace LastMileAPP
                 panel3.Width -= 25; // slide closed
                 if (panel3.Width <= 0)
                 {
+                    panel3.Width = 0;
                     sliderTimer.Stop();
                     isCollapsed = true;
                 }
             }
+
+            UpdateToggleButtonPosition();
         }
 
         private void btnToggleSlide_Click(object sender, EventArgs e)
         {
             sliderTimer.Start();
+        }
+
+        private void UpdateToggleButtonPosition()
+        {
+            const int offset = 3;
+            int newLeft = panel3.Width + offset;
+
+            if (newLeft < 0)
+            {
+                newLeft = 0;
+            }
+
+            btnToggleSlide.Left = newLeft;
         }
 
         private void treeViewCategories_AfterCheck(object sender, TreeViewEventArgs e)
