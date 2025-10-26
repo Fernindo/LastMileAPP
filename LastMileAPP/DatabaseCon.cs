@@ -51,6 +51,19 @@ namespace LastMileAPP
                 return dt;
             }
         }
+        public static DataTable GetCategories()
+        {
+            string sql = @"
+        SELECT DISTINCT hlavna_kategoria, nazov_tabulky
+        FROM produkty p
+        LEFT JOIN produkt_class pc ON p.id = pc.produkt_id
+        LEFT JOIN class c ON pc.class_id = c.id
+        WHERE hlavna_kategoria IS NOT NULL
+        ORDER BY hlavna_kategoria, nazov_tabulky;
+    ";
+
+            return RunQuery(sql);
+        }
     }
 
 }

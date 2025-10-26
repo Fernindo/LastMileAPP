@@ -20,13 +20,48 @@ namespace LastMileAPP
 {
     public partial class MainApp : Form
     {
+
         private DataTable fullDataTable;
         private DataTable basketTable;
+
+        private FiltersController filtersController;
+
+        bool isCollapsed = true;
+        int slideWidth;
+
+
         public MainApp()
         {
             InitializeComponent();
             this.WindowState = FormWindowState.Maximized;
 
+        }
+        private void LoadDatabase()
+        {
+            try
+            {
+                string sql = @"
+            SELECT p.*, c.hlavna_kategoria, c.nazov_tabulky
+            FROM produkty p
+            LEFT JOIN produkt_class pc ON p.id = pc.produkt_id
+            LEFT JOIN class c ON pc.class_id = c.id;
+        ";
+
+                fullDataTable = DatabaseCon.RunQuery(sql);
+                dataGridDatabase.DataSource = fullDataTable;
+                dataGridDatabase.RowHeadersVisible = false;
+
+                dataGridDatabase.ReadOnly = true;
+                dataGridDatabase.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                dataGridDatabase.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+
+                dataGridDatabase.Columns["id"].Visible = false;
+                dataGridDatabase.Columns["product_type_id"].Visible = false;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Database error:\n" + ex.Message);
+            }
         }
 
 
@@ -34,15 +69,32 @@ namespace LastMileAPP
         private void MainApp_Load(object sender, EventArgs e)
         {
             LoadDatabase();
+            treeViewCategories.ShowPlusMinus = false;
+
+            var categoriesTable = DatabaseCon.GetCategories();
+            FiltersTree.Build(treeViewCategories, categoriesTable);
+
+            
+            filtersController = new FiltersController(treeViewCategories, dataGridDatabase, fullDataTable);
+
+
+
+
+
             basketTable = BasketFunctions.InitializeBasketTable(fullDataTable);
             dataGridBasket.DataSource = basketTable;
             dataGridBasket.RowHeadersVisible = false;
+
             if (dataGridBasket.Columns.Contains("id"))
                 dataGridBasket.Columns["id"].Visible = false;
             if (dataGridBasket.Columns.Contains("product_type_id"))
                 dataGridBasket.Columns["product_type_id"].Visible = false;
             foreach (DataGridViewColumn col in dataGridBasket.Columns)
                 col.ReadOnly = true;
+
+
+            slideWidth = panel3.Width;
+            panel3.Width = 0;
 
             // Enable editing only for specific columns
             string[] editableCols = { "quantity", "koeficient_prace", "cena_prace", "koeficient_material", "nakup_materialu" };
@@ -74,26 +126,7 @@ namespace LastMileAPP
             var row = ((DataRowView)dataGridBasket.Rows[e.RowIndex].DataBoundItem).Row;
             BasketFunctions.RecalculateRow(row);
         }
-        private void LoadDatabase()
-        {
-            try
-            {
-                fullDataTable = DatabaseCon.RunQuery("SELECT * FROM produkty");
-                dataGridDatabase.DataSource = fullDataTable;
-                dataGridDatabase.RowHeadersVisible = false;
 
-                dataGridDatabase.ReadOnly = true;
-                dataGridDatabase.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-                dataGridDatabase.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-
-                dataGridDatabase.Columns["id"].Visible = false;
-                dataGridDatabase.Columns["product_type_id"].Visible = false;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Database error:\n" + ex.Message);
-            }
-        }
 
 
         private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
@@ -153,6 +186,57 @@ namespace LastMileAPP
         {
             ExportCP.ExportBasketToExcel(basketTable);
 
+        }
+
+        private void sliderTimer_Tick(object sender, EventArgs e)
+        {
+            if (isCollapsed)
+            {
+                panel3.Width += 25; // slide open
+                if (panel3.Width >= slideWidth)
+                {
+                    sliderTimer.Stop();
+                    isCollapsed = false;
+                }
+            }
+            else
+            {
+                panel3.Width -= 25; // slide closed
+                if (panel3.Width <= 0)
+                {
+                    sliderTimer.Stop();
+                    isCollapsed = true;
+                }
+            }
+        }
+
+        private void btnToggleSlide_Click(object sender, EventArgs e)
+        {
+            sliderTimer.Start();
+        }
+
+        private void treeViewCategories_AfterCheck(object sender, TreeViewEventArgs e)
+        {
+            
+            // prevent infinite loop when checking children programmatically
+            treeViewCategories.AfterCheck -= treeViewCategories_AfterCheck;
+
+            if (e.Node.Nodes.Count > 0) // it's a parent
+            {
+                if (e.Node.Checked)
+                    e.Node.Expand();
+                else
+                    e.Node.Collapse();
+            }
+
+            // also check/uncheck all children automatically if you want
+            foreach (TreeNode child in e.Node.Nodes)
+            {
+                child.Checked = e.Node.Checked;
+            }
+
+            // reattach event
+            treeViewCategories.AfterCheck += treeViewCategories_AfterCheck;
         }
     }
 }

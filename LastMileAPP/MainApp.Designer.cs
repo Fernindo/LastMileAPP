@@ -28,16 +28,23 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             splitContainer1 = new SplitContainer();
             nameSplit = new SplitContainer();
             filterLabel = new Label();
             txtSearch = new TextBox();
             splitter1 = new Splitter();
+            splitContainer3 = new SplitContainer();
             dataGridDatabase = new DataGridView();
+            panel2 = new Panel();
             splitContainer2 = new SplitContainer();
             dataGridBasket = new DataGridView();
             panel1 = new Panel();
             btnExport = new Button();
+            btnToggleSlide = new Button();
+            panel3 = new Panel();
+            treeViewCategories = new TreeView();
+            sliderTimer = new System.Windows.Forms.Timer(components);
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -46,13 +53,19 @@
             nameSplit.Panel1.SuspendLayout();
             nameSplit.Panel2.SuspendLayout();
             nameSplit.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainer3).BeginInit();
+            splitContainer3.Panel1.SuspendLayout();
+            splitContainer3.Panel2.SuspendLayout();
+            splitContainer3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridDatabase).BeginInit();
+            panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer2).BeginInit();
             splitContainer2.Panel1.SuspendLayout();
             splitContainer2.Panel2.SuspendLayout();
             splitContainer2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridBasket).BeginInit();
             panel1.SuspendLayout();
+            panel3.SuspendLayout();
             SuspendLayout();
             // 
             // splitContainer1
@@ -89,7 +102,7 @@
             // 
             // nameSplit.Panel2
             // 
-            nameSplit.Panel2.Controls.Add(dataGridDatabase);
+            nameSplit.Panel2.Controls.Add(splitContainer3);
             nameSplit.Size = new Size(800, 239);
             nameSplit.SplitterDistance = 30;
             nameSplit.TabIndex = 1;
@@ -119,6 +132,24 @@
             splitter1.TabIndex = 0;
             splitter1.TabStop = false;
             // 
+            // splitContainer3
+            // 
+            splitContainer3.Dock = DockStyle.Fill;
+            splitContainer3.Location = new Point(0, 0);
+            splitContainer3.Name = "splitContainer3";
+            splitContainer3.Orientation = Orientation.Horizontal;
+            // 
+            // splitContainer3.Panel1
+            // 
+            splitContainer3.Panel1.Controls.Add(dataGridDatabase);
+            // 
+            // splitContainer3.Panel2
+            // 
+            splitContainer3.Panel2.Controls.Add(panel2);
+            splitContainer3.Size = new Size(800, 205);
+            splitContainer3.SplitterDistance = 176;
+            splitContainer3.TabIndex = 1;
+            // 
             // dataGridDatabase
             // 
             dataGridDatabase.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -126,9 +157,18 @@
             dataGridDatabase.Location = new Point(0, 0);
             dataGridDatabase.Margin = new Padding(20);
             dataGridDatabase.Name = "dataGridDatabase";
-            dataGridDatabase.Size = new Size(800, 205);
+            dataGridDatabase.Size = new Size(800, 176);
             dataGridDatabase.TabIndex = 0;
             dataGridDatabase.CellDoubleClick += dataGridDatabase_CellDoubleClick;
+            // 
+            // panel2
+            // 
+            panel2.Controls.Add(btnToggleSlide);
+            panel2.Dock = DockStyle.Fill;
+            panel2.Location = new Point(0, 0);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(800, 25);
+            panel2.TabIndex = 0;
             // 
             // splitContainer2
             // 
@@ -176,11 +216,45 @@
             btnExport.UseVisualStyleBackColor = true;
             btnExport.Click += btnExport_Click;
             // 
+            // btnToggleSlide
+            // 
+            btnToggleSlide.Location = new Point(164, 0);
+            btnToggleSlide.Name = "btnToggleSlide";
+            btnToggleSlide.Size = new Size(33, 23);
+            btnToggleSlide.TabIndex = 0;
+            btnToggleSlide.Text = ">>";
+            btnToggleSlide.UseVisualStyleBackColor = true;
+            btnToggleSlide.Click += btnToggleSlide_Click;
+            // 
+            // panel3
+            // 
+            panel3.Controls.Add(treeViewCategories);
+            panel3.Dock = DockStyle.Left;
+            panel3.Location = new Point(0, 0);
+            panel3.Name = "panel3";
+            panel3.Size = new Size(161, 450);
+            panel3.TabIndex = 2;
+            // 
+            // treeViewCategories
+            // 
+            treeViewCategories.CheckBoxes = true;
+            treeViewCategories.Location = new Point(0, 0);
+            treeViewCategories.Name = "treeViewCategories";
+            treeViewCategories.Size = new Size(158, 450);
+            treeViewCategories.TabIndex = 0;
+            treeViewCategories.AfterCheck += treeViewCategories_AfterCheck;
+            // 
+            // sliderTimer
+            // 
+            sliderTimer.Interval = 10;
+            sliderTimer.Tick += sliderTimer_Tick;
+            // 
             // MainApp
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(panel3);
             Controls.Add(splitContainer1);
             Name = "MainApp";
             Text = "MainApp";
@@ -195,13 +269,19 @@
             nameSplit.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)nameSplit).EndInit();
             nameSplit.ResumeLayout(false);
+            splitContainer3.Panel1.ResumeLayout(false);
+            splitContainer3.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitContainer3).EndInit();
+            splitContainer3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dataGridDatabase).EndInit();
+            panel2.ResumeLayout(false);
             splitContainer2.Panel1.ResumeLayout(false);
             splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer2).EndInit();
             splitContainer2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dataGridBasket).EndInit();
             panel1.ResumeLayout(false);
+            panel3.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -217,5 +297,11 @@
         private Label filterLabel;
         private Panel panel1;
         private Button btnExport;
+        private SplitContainer splitContainer3;
+        private Panel panel2;
+        private Button btnToggleSlide;
+        private Panel panel3;
+        private System.Windows.Forms.Timer sliderTimer;
+        private TreeView treeViewCategories;
     }
 }
