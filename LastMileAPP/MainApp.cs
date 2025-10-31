@@ -15,7 +15,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Reflection;
-using BrightIdeasSoftware;
+
+
 
 
 
@@ -24,9 +25,12 @@ namespace LastMileAPP
 {
     public partial class MainApp : Form
     {
-        private ObjectListView basketView;
+
         private DataTable fullDataTable;
         private DataTable basketTable;
+
+        
+
 
         private FiltersController filtersController;
 
@@ -51,22 +55,28 @@ namespace LastMileAPP
             LEFT JOIN class c ON pc.class_id = c.id;
         ";
 
+                // ✅ Get the data from your DatabaseCon
                 fullDataTable = DatabaseCon.RunQuery(sql);
+
+                // ✅ Bind the data to the grid
                 dataGridDatabase.DataSource = fullDataTable;
+
+                // ✅ Optional formatting
                 dataGridDatabase.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
                 dataGridDatabase.MultiSelect = false;
                 dataGridDatabase.RowHeadersVisible = false;
-
                 dataGridDatabase.ReadOnly = true;
                 dataGridDatabase.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-                dataGridDatabase.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
 
-                dataGridDatabase.Columns["id"].Visible = false;
-                dataGridDatabase.Columns["product_type_id"].Visible = false;
+                // ✅ Hide columns you don’t need
+                if (dataGridDatabase.Columns.Contains("id"))
+                    dataGridDatabase.Columns["id"].Visible = false;
+                if (dataGridDatabase.Columns.Contains("product_type_id"))
+                    dataGridDatabase.Columns["product_type_id"].Visible = false;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Database error:\n" + ex.Message);
+                MessageBox.Show("❌ Database error:\n" + ex.Message, "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -88,9 +98,7 @@ namespace LastMileAPP
 
 
             basketTable = BasketFunctions.InitializeBasketTable(fullDataTable);
-            InitializeBasketView();
-            PopulateBasketView();
-
+            dataGridBasket.DataSource = basketTable;
             dataGridBasket.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridBasket.MultiSelect = false;
             dataGridBasket.RowHeadersVisible = false;
@@ -279,8 +287,8 @@ namespace LastMileAPP
 
         private void btnSettings_Click(object sender, EventArgs e)
         {
-            var settingsForm = new Settings(); 
-            settingsForm.Show();
+            //var settingsForm = new Settings(); 
+            //settingsForm.Show();
         }
     }
 }

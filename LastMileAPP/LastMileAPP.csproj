@@ -10,10 +10,15 @@
 
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.105.0" />
+    <PackageReference Include="DG.AdvancedDataGridView" Version="1.2.30115.18" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="Npgsql" Version="9.0.4" />
-    <PackageReference Include="ObjectListView.Official" Version="2.9.1" />
-    <PackageReference Include="Vip.ObjectListView" Version="1.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="AdvancedDataGridView">
+      <HintPath>..\..\..\..\.nuget\packages\dg.advanceddatagridview\1.2.30115.18\lib\net8.0-windows7.0\AdvancedDataGridView.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

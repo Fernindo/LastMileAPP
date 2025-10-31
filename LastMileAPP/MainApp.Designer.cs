@@ -37,6 +37,7 @@
             splitter1 = new Splitter();
             splitContainer3 = new SplitContainer();
             dataGridDatabase = new DataGridView();
+            dbBindingSource = new BindingSource(components);
             panel2 = new Panel();
             BasketVsetko = new Button();
             EZSBasketButton = new Button();
@@ -63,6 +64,7 @@
             splitContainer3.Panel2.SuspendLayout();
             splitContainer3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridDatabase).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dbBindingSource).BeginInit();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer2).BeginInit();
             splitContainer2.Panel1.SuspendLayout();
@@ -335,6 +337,7 @@
             ((System.ComponentModel.ISupportInitialize)splitContainer3).EndInit();
             splitContainer3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dataGridDatabase).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dbBindingSource).EndInit();
             panel2.ResumeLayout(false);
             splitContainer2.Panel1.ResumeLayout(false);
             splitContainer2.Panel2.ResumeLayout(false);
@@ -369,5 +372,6 @@
         private Button SKBasketButton;
         private Button BasketVsetko;
         private Button btnSettings;
+        private BindingSource dbBindingSource;
     }
 }
