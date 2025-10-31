@@ -87,8 +87,8 @@
             // splitContainer1.Panel2
             // 
             splitContainer1.Panel2.Controls.Add(splitContainer2);
-            splitContainer1.Size = new Size(1188, 609);
-            splitContainer1.SplitterDistance = 323;
+            splitContainer1.Size = new Size(900, 519);
+            splitContainer1.SplitterDistance = 275;
             splitContainer1.TabIndex = 0;
             splitContainer1.SplitterMoved += splitContainer1_SplitterMoved;
             // 
@@ -109,8 +109,8 @@
             // nameSplit.Panel2
             // 
             nameSplit.Panel2.Controls.Add(splitContainer3);
-            nameSplit.Size = new Size(1188, 323);
-            nameSplit.SplitterDistance = 40;
+            nameSplit.Size = new Size(900, 275);
+            nameSplit.SplitterDistance = 34;
             nameSplit.TabIndex = 1;
             // 
             // btnSettings
@@ -144,7 +144,7 @@
             // 
             splitter1.Location = new Point(0, 0);
             splitter1.Name = "splitter1";
-            splitter1.Size = new Size(3, 40);
+            splitter1.Size = new Size(3, 34);
             splitter1.TabIndex = 0;
             splitter1.TabStop = false;
             // 
@@ -162,8 +162,8 @@
             // splitContainer3.Panel2
             // 
             splitContainer3.Panel2.Controls.Add(panel2);
-            splitContainer3.Size = new Size(1188, 279);
-            splitContainer3.SplitterDistance = 239;
+            splitContainer3.Size = new Size(900, 237);
+            splitContainer3.SplitterDistance = 203;
             splitContainer3.TabIndex = 1;
             // 
             // dataGridDatabase
@@ -173,7 +173,7 @@
             dataGridDatabase.Location = new Point(0, 0);
             dataGridDatabase.Margin = new Padding(20);
             dataGridDatabase.Name = "dataGridDatabase";
-            dataGridDatabase.Size = new Size(1188, 239);
+            dataGridDatabase.Size = new Size(900, 203);
             dataGridDatabase.TabIndex = 0;
             dataGridDatabase.CellDoubleClick += dataGridDatabase_CellDoubleClick;
             // 
@@ -187,7 +187,7 @@
             panel2.Dock = DockStyle.Fill;
             panel2.Location = new Point(0, 0);
             panel2.Name = "panel2";
-            panel2.Size = new Size(1188, 36);
+            panel2.Size = new Size(900, 30);
             panel2.TabIndex = 0;
             // 
             // BasketVsetko
@@ -254,8 +254,8 @@
             // splitContainer2.Panel2
             // 
             splitContainer2.Panel2.Controls.Add(panel1);
-            splitContainer2.Size = new Size(1188, 282);
-            splitContainer2.SplitterDistance = 228;
+            splitContainer2.Size = new Size(900, 240);
+            splitContainer2.SplitterDistance = 194;
             splitContainer2.TabIndex = 1;
             // 
             // dataGridBasket
@@ -264,7 +264,7 @@
             dataGridBasket.Dock = DockStyle.Fill;
             dataGridBasket.Location = new Point(0, 0);
             dataGridBasket.Name = "dataGridBasket";
-            dataGridBasket.Size = new Size(1188, 228);
+            dataGridBasket.Size = new Size(900, 194);
             dataGridBasket.TabIndex = 0;
             // 
             // panel1
@@ -273,7 +273,7 @@
             panel1.Dock = DockStyle.Fill;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1188, 50);
+            panel1.Size = new Size(900, 42);
             panel1.TabIndex = 0;
             // 
             // btnExport
@@ -292,7 +292,7 @@
             panel3.Dock = DockStyle.Left;
             panel3.Location = new Point(0, 0);
             panel3.Name = "panel3";
-            panel3.Size = new Size(161, 609);
+            panel3.Size = new Size(161, 519);
             panel3.TabIndex = 2;
             // 
             // treeViewCategories
@@ -301,7 +301,7 @@
             treeViewCategories.Dock = DockStyle.Fill;
             treeViewCategories.Location = new Point(0, 0);
             treeViewCategories.Name = "treeViewCategories";
-            treeViewCategories.Size = new Size(161, 609);
+            treeViewCategories.Size = new Size(161, 519);
             treeViewCategories.TabIndex = 0;
             treeViewCategories.AfterCheck += treeViewCategories_AfterCheck;
             // 
@@ -314,7 +314,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1349, 609);
+            ClientSize = new Size(1061, 519);
             Controls.Add(splitContainer1);
             Controls.Add(panel3);
             Name = "MainApp";

@@ -15,13 +15,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Reflection;
+using BrightIdeasSoftware;
+
+
 
 
 namespace LastMileAPP
 {
     public partial class MainApp : Form
     {
-
+        private ObjectListView basketView;
         private DataTable fullDataTable;
         private DataTable basketTable;
 
@@ -85,7 +88,9 @@ namespace LastMileAPP
 
 
             basketTable = BasketFunctions.InitializeBasketTable(fullDataTable);
-            dataGridBasket.DataSource = basketTable;
+            InitializeBasketView();
+            PopulateBasketView();
+
             dataGridBasket.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridBasket.MultiSelect = false;
             dataGridBasket.RowHeadersVisible = false;
