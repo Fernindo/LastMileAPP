@@ -274,8 +274,8 @@ namespace LastMileAPP
 
         private void btnSettings_Click(object sender, EventArgs e)
         {
-            var settingsForm = new Settings(); 
-            settingsForm.Show();
+            //var settingsForm = new Settings(); 
+            //settingsForm.Show();
         }
     }
 }
