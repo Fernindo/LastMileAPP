@@ -44,6 +44,12 @@ namespace LastMileAPP
 
         private void ApplyFilter()
         {
+            if (sourceTable == null)
+            {
+                grid.DataSource = null;
+                return;
+            }
+
             var selected = GetCheckedCategories();
 
             if (!selected.Any())
