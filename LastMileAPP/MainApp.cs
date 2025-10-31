@@ -17,6 +17,10 @@ using System.Windows.Forms;
 using System.Reflection;
 
 
+
+
+
+
 namespace LastMileAPP
 {
     public partial class MainApp : Form
@@ -24,6 +28,9 @@ namespace LastMileAPP
 
         private DataTable fullDataTable;
         private DataTable basketTable;
+
+        
+
 
         private FiltersController filtersController;
 
@@ -48,22 +55,28 @@ namespace LastMileAPP
             LEFT JOIN class c ON pc.class_id = c.id;
         ";
 
+                // ✅ Get the data from your DatabaseCon
                 fullDataTable = DatabaseCon.RunQuery(sql);
+
+                // ✅ Bind the data to the grid
                 dataGridDatabase.DataSource = fullDataTable;
+
+                // ✅ Optional formatting
                 dataGridDatabase.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
                 dataGridDatabase.MultiSelect = false;
                 dataGridDatabase.RowHeadersVisible = false;
-
                 dataGridDatabase.ReadOnly = true;
                 dataGridDatabase.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-                dataGridDatabase.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
 
-                dataGridDatabase.Columns["id"].Visible = false;
-                dataGridDatabase.Columns["product_type_id"].Visible = false;
+                // ✅ Hide columns you don’t need
+                if (dataGridDatabase.Columns.Contains("id"))
+                    dataGridDatabase.Columns["id"].Visible = false;
+                if (dataGridDatabase.Columns.Contains("product_type_id"))
+                    dataGridDatabase.Columns["product_type_id"].Visible = false;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Database error:\n" + ex.Message);
+                MessageBox.Show("❌ Database error:\n" + ex.Message, "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
