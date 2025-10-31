@@ -16,21 +16,31 @@ namespace LastMileAPP
 
             DataTable basketTable = fullDataTable.Clone();
 
-            basketTable.Columns.Add("quantity", typeof(int));
-            basketTable.Columns.Add("material_spolu", typeof(double));
-            basketTable.Columns.Add("praca_spolu", typeof(double));
-            basketTable.Columns.Add("spolu", typeof(double));
+            if (!basketTable.Columns.Contains("quantity"))
+                basketTable.Columns.Add("quantity", typeof(int));
+
+            if (!basketTable.Columns.Contains("material_spolu"))
+                basketTable.Columns.Add("material_spolu", typeof(double));
+
+            if (!basketTable.Columns.Contains("praca_spolu"))
+                basketTable.Columns.Add("praca_spolu", typeof(double));
+
+            if (!basketTable.Columns.Contains("spolu"))
+                basketTable.Columns.Add("spolu", typeof(double));
 
             return basketTable;
         }
 
         public static void RecalculateRow(DataRow row)
         {
-            double nakup = Convert.ToDouble(row["nakup_materialu"]);
-            double kMat = Convert.ToDouble(row["koeficient_material"]);
-            double cenaPrace = Convert.ToDouble(row["cena_prace"]);
-            double kPrace = Convert.ToDouble(row["koeficient_prace"]);
-            int qty = Convert.ToInt32(row["quantity"]);
+            if (row == null)
+                throw new ArgumentNullException(nameof(row));
+
+            double nakup = GetNumericValue(row, "nakup_materialu");
+            double kMat = GetNumericValue(row, "koeficient_material");
+            double cenaPrace = GetNumericValue(row, "cena_prace");
+            double kPrace = GetNumericValue(row, "koeficient_prace");
+            int qty = (int)Math.Round(GetNumericValue(row, "quantity"));
 
             double materialSpolu = nakup * kMat * qty;
             double pracaSpolu = cenaPrace * kPrace * qty;
@@ -39,6 +49,54 @@ namespace LastMileAPP
             row["material_spolu"] = materialSpolu;
             row["praca_spolu"] = pracaSpolu;
             row["spolu"] = spolu;
+        }
+
+        public static BasketTotals RecomputeTotals(DataTable basketTable)
+        {
+            if (basketTable == null)
+                throw new ArgumentNullException(nameof(basketTable));
+
+            double materialTotal = 0d;
+            double workTotal = 0d;
+
+            foreach (DataRow row in basketTable.Rows)
+            {
+                if (row.RowState == DataRowState.Deleted)
+                    continue;
+
+                int qty = (int)Math.Round(GetNumericValue(row, "quantity"));
+                double materialContribution = GetNumericValue(row, "nakup_materialu") * GetNumericValue(row, "koeficient_material") * qty;
+                double workContribution = GetNumericValue(row, "cena_prace") * GetNumericValue(row, "koeficient_prace") * qty;
+
+                materialTotal += materialContribution;
+                workTotal += workContribution;
+            }
+
+            return new BasketTotals(materialTotal, workTotal);
+        }
+
+        private static double GetNumericValue(DataRow row, string columnName)
+        {
+            if (!row.Table.Columns.Contains(columnName))
+                throw new ArgumentException($"Column '{columnName}' was not found in the provided row.", nameof(columnName));
+
+            object value = row[columnName];
+
+            if (value == null || value == DBNull.Value)
+                return 0d;
+
+            try
+            {
+                return Convert.ToDouble(value);
+            }
+            catch (FormatException ex)
+            {
+                throw new FormatException($"Unable to convert value '{value}' in column '{columnName}' to a number.", ex);
+            }
+            catch (InvalidCastException ex)
+            {
+                throw new InvalidCastException($"Value in column '{columnName}' cannot be cast to a numeric type.", ex);
+            }
         }
 
         public static void HideColumns(DataGridView dataGridBasket)
@@ -59,6 +117,19 @@ namespace LastMileAPP
         }
     }
 
-    
+    public readonly struct BasketTotals
+    {
+        public BasketTotals(double materialTotal, double workTotal)
+        {
+            MaterialTotal = materialTotal;
+            WorkTotal = workTotal;
+        }
+
+        public double MaterialTotal { get; }
+
+        public double WorkTotal { get; }
+
+        public double OverallTotal => MaterialTotal + WorkTotal;
+    }
 }
 

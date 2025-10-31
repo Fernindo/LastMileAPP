@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -123,6 +124,8 @@ namespace LastMileAPP
             };
             dataGridBasket.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
+            UpdateBasketSummary();
+
         }
         private void dataGridBasket_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
@@ -130,6 +133,7 @@ namespace LastMileAPP
 
             var row = ((DataRowView)dataGridBasket.Rows[e.RowIndex].DataBoundItem).Row;
             BasketFunctions.RecalculateRow(row);
+            UpdateBasketSummary();
         }
 
 
@@ -185,12 +189,50 @@ namespace LastMileAPP
                 basketTable.Rows.Add(newRow);
                 BasketFunctions.RecalculateRow(newRow);
             }
+            UpdateBasketSummary();
         }
 
         private void btnExport_Click(object sender, EventArgs e)
         {
             ExportCP.ExportBasketToExcel(basketTable);
 
+        }
+
+        private void UpdateBasketSummary()
+        {
+            if (labelMaterialTotalValue == null)
+                return;
+
+            if (basketTable == null || basketTable.Rows.Count == 0)
+            {
+                SetSummaryLabels(0d, 0d, 0d);
+                return;
+            }
+
+            BasketTotals totals;
+            try
+            {
+                totals = BasketFunctions.RecomputeTotals(basketTable);
+            }
+            catch (ArgumentException)
+            {
+                SetSummaryLabels(0d, 0d, 0d);
+                return;
+            }
+
+            SetSummaryLabels(totals.MaterialTotal, totals.WorkTotal, totals.OverallTotal);
+        }
+
+        private void SetSummaryLabels(double material, double work, double overall)
+        {
+            labelMaterialTotalValue.Text = FormatCurrency(material);
+            labelWorkTotalValue.Text = FormatCurrency(work);
+            labelGrandTotalValue.Text = FormatCurrency(overall);
+        }
+
+        private static string FormatCurrency(double value)
+        {
+            return value.ToString("N2", CultureInfo.CurrentCulture);
         }
 
         private void sliderTimer_Tick(object sender, EventArgs e)

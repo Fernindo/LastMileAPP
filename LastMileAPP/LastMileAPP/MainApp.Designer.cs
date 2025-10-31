@@ -269,6 +269,12 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(labelGrandTotalValue);
+            panel1.Controls.Add(labelGrandTotalCaption);
+            panel1.Controls.Add(labelWorkTotalValue);
+            panel1.Controls.Add(labelWorkTotalCaption);
+            panel1.Controls.Add(labelMaterialTotalValue);
+            panel1.Controls.Add(labelMaterialTotalCaption);
             panel1.Controls.Add(btnExport);
             panel1.Dock = DockStyle.Fill;
             panel1.Location = new Point(0, 0);
@@ -285,9 +291,65 @@
             btnExport.Text = "Export";
             btnExport.UseVisualStyleBackColor = true;
             btnExport.Click += btnExport_Click;
-            // 
+            //
+            // labelMaterialTotalCaption
+            //
+            labelMaterialTotalCaption.AutoSize = true;
+            labelMaterialTotalCaption.Location = new Point(130, 8);
+            labelMaterialTotalCaption.Name = "labelMaterialTotalCaption";
+            labelMaterialTotalCaption.Size = new Size(86, 15);
+            labelMaterialTotalCaption.TabIndex = 1;
+            labelMaterialTotalCaption.Text = "Spolu materiál:";
+            //
+            // labelMaterialTotalValue
+            //
+            labelMaterialTotalValue.AutoSize = true;
+            labelMaterialTotalValue.Location = new Point(222, 8);
+            labelMaterialTotalValue.Name = "labelMaterialTotalValue";
+            labelMaterialTotalValue.Size = new Size(28, 15);
+            labelMaterialTotalValue.TabIndex = 2;
+            labelMaterialTotalValue.Text = "0,00";
+            //
+            // labelWorkTotalCaption
+            //
+            labelWorkTotalCaption.AutoSize = true;
+            labelWorkTotalCaption.Location = new Point(288, 8);
+            labelWorkTotalCaption.Name = "labelWorkTotalCaption";
+            labelWorkTotalCaption.Size = new Size(74, 15);
+            labelWorkTotalCaption.TabIndex = 3;
+            labelWorkTotalCaption.Text = "Spolu práca:";
+            //
+            // labelWorkTotalValue
+            //
+            labelWorkTotalValue.AutoSize = true;
+            labelWorkTotalValue.Location = new Point(368, 8);
+            labelWorkTotalValue.Name = "labelWorkTotalValue";
+            labelWorkTotalValue.Size = new Size(28, 15);
+            labelWorkTotalValue.TabIndex = 4;
+            labelWorkTotalValue.Text = "0,00";
+            //
+            // labelGrandTotalCaption
+            //
+            labelGrandTotalCaption.AutoSize = true;
+            labelGrandTotalCaption.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            labelGrandTotalCaption.Location = new Point(431, 8);
+            labelGrandTotalCaption.Name = "labelGrandTotalCaption";
+            labelGrandTotalCaption.Size = new Size(40, 15);
+            labelGrandTotalCaption.TabIndex = 5;
+            labelGrandTotalCaption.Text = "Spolu:";
+            //
+            // labelGrandTotalValue
+            //
+            labelGrandTotalValue.AutoSize = true;
+            labelGrandTotalValue.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            labelGrandTotalValue.Location = new Point(477, 8);
+            labelGrandTotalValue.Name = "labelGrandTotalValue";
+            labelGrandTotalValue.Size = new Size(32, 15);
+            labelGrandTotalValue.TabIndex = 6;
+            labelGrandTotalValue.Text = "0,00";
+            //
             // panel3
-            // 
+            //
             panel3.Controls.Add(treeViewCategories);
             panel3.Dock = DockStyle.Left;
             panel3.Location = new Point(0, 0);
@@ -369,5 +431,11 @@
         private Button SKBasketButton;
         private Button BasketVsetko;
         private Button btnSettings;
+        private Label labelMaterialTotalCaption;
+        private Label labelMaterialTotalValue;
+        private Label labelWorkTotalCaption;
+        private Label labelWorkTotalValue;
+        private Label labelGrandTotalCaption;
+        private Label labelGrandTotalValue;
     }
 }
