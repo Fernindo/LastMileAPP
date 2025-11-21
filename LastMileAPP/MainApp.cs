@@ -28,6 +28,7 @@ namespace LastMileAPP
 
         private DataTable fullDataTable;
         private DataTable basketTable;
+        private DataTable basketDisplayTable;
 
         
 
@@ -36,6 +37,9 @@ namespace LastMileAPP
 
         bool isCollapsed = true;
         int slideWidth;
+
+        private string categoryColumnName;
+        private string basketFilter = string.Empty;
 
 
         public MainApp()
@@ -57,9 +61,10 @@ namespace LastMileAPP
 
                 // ✅ Get the data from your DatabaseCon
                 fullDataTable = DatabaseCon.RunQuery(sql);
+                categoryColumnName = SectionDividerHelper.ResolveCategoryColumn(fullDataTable);
 
                 // ✅ Bind the data to the grid
-                dataGridDatabase.DataSource = fullDataTable;
+                BindDatabaseGrid(fullDataTable);
 
                 // ✅ Optional formatting
                 dataGridDatabase.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
@@ -98,51 +103,36 @@ namespace LastMileAPP
 
 
             basketTable = BasketFunctions.InitializeBasketTable(fullDataTable);
-            dataGridBasket.DataSource = basketTable;
-            dataGridBasket.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridBasket.MultiSelect = false;
-            dataGridBasket.RowHeadersVisible = false;
-
-            BasketFunctions.HideColumns(dataGridBasket);
-
-
-            foreach (DataGridViewColumn col in dataGridBasket.Columns)
-                col.ReadOnly = true;
-
-
-            slideWidth = panel3.Width;
-            panel3.Width = 0;
-
-
-            // Enable editing only for specific columns
-            string[] editableCols = { "quantity", "koeficient_prace", "cena_prace", "koeficient_material", "nakup_materialu" };
-
-            foreach (string name in editableCols)
-            {
-                if (dataGridBasket.Columns.Contains(name))
-                    dataGridBasket.Columns[name].ReadOnly = false;
-            }
-            string[] computedCols = { "material_spolu", "praca_spolu", "spolu" };
-            foreach (string name in computedCols)
-            {
-                if (dataGridBasket.Columns.Contains(name))
-                    dataGridBasket.Columns[name].ReadOnly = true;
-            }
+            ConfigureBasketGrid();
+            RefreshBasketDisplay();
             dataGridBasket.CellValueChanged += dataGridBasket_CellValueChanged;
             dataGridBasket.CurrentCellDirtyStateChanged += (s, eArgs) =>
             {
                 if (dataGridBasket.IsCurrentCellDirty)
                     dataGridBasket.CommitEdit(DataGridViewDataErrorContexts.Commit);
             };
-            dataGridBasket.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+            slideWidth = panel3.Width;
+            panel3.Width = 0;
 
         }
         private void dataGridBasket_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0) return;
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
 
-            var row = ((DataRowView)dataGridBasket.Rows[e.RowIndex].DataBoundItem).Row;
-            BasketFunctions.RecalculateRow(row);
+            var rowView = dataGridBasket.Rows[e.RowIndex].DataBoundItem as DataRowView;
+            if (rowView == null || SectionDividerHelper.IsDividerRow(rowView.Row)) return;
+
+            if (!int.TryParse(rowView["id"].ToString(), out int id)) return;
+            string columnName = dataGridBasket.Columns[e.ColumnIndex].Name;
+            if (!basketTable.Columns.Contains(columnName)) return;
+
+            DataRow target = basketTable.Rows.Cast<DataRow>().FirstOrDefault(r => Convert.ToInt32(r["id"]) == id);
+            if (target == null) return;
+
+            target[columnName] = rowView.Row[columnName];
+            BasketFunctions.RecalculateRow(target);
+            RefreshBasketDisplay();
         }
 
 
@@ -162,13 +152,13 @@ namespace LastMileAPP
 
             if (string.IsNullOrEmpty(filterText))
             {
-                dataGridDatabase.DataSource = fullDataTable;
+                BindDatabaseGrid(fullDataTable);
             }
             else
             {
                 DataView dv = new DataView(fullDataTable);
                 dv.RowFilter = $"produkt LIKE '%{filterText}%'";
-                dataGridDatabase.DataSource = dv;
+                BindDatabaseGrid(dv.ToTable());
             }
         }
 
@@ -177,7 +167,8 @@ namespace LastMileAPP
             if (e.RowIndex < 0) return; // header clicked
 
             // Get ID of selected product
-            int id = Convert.ToInt32(dataGridDatabase.Rows[e.RowIndex].Cells["id"].Value);
+            if (!int.TryParse(dataGridDatabase.Rows[e.RowIndex].Cells["id"].Value?.ToString(), out int id) || id == SectionDividerHelper.DividerId)
+                return;
 
             // Check if already in basket
             DataRow existing = basketTable.Rows.Cast<DataRow>().FirstOrDefault(r => Convert.ToInt32(r["id"]) == id);
@@ -202,7 +193,8 @@ namespace LastMileAPP
 
         private void btnExport_Click(object sender, EventArgs e)
         {
-            ExportCP.ExportBasketToExcel(basketTable);
+            var tableForExport = SectionDividerHelper.BuildWithDividers(basketTable, categoryColumnName);
+            ExportCP.ExportBasketToExcel(tableForExport);
 
         }
 
@@ -267,28 +259,86 @@ namespace LastMileAPP
 
         private void SKBasketButton_Click(object sender, EventArgs e)
         {
-            basketTable.DefaultView.RowFilter = "hlavna_kategoria = 'SK'";
+            basketFilter = "hlavna_kategoria = 'SK'";
+            RefreshBasketDisplay();
         }
 
         private void CCTVBasketButton_Click(object sender, EventArgs e)
         {
-            basketTable.DefaultView.RowFilter = "hlavna_kategoria = 'CCTV'";
+            basketFilter = "hlavna_kategoria = 'CCTV'";
+            RefreshBasketDisplay();
         }
 
         private void EZSBasketButton_Click(object sender, EventArgs e)
         {
-            basketTable.DefaultView.RowFilter = "hlavna_kategoria = 'EZS'";
+            basketFilter = "hlavna_kategoria = 'EZS'";
+            RefreshBasketDisplay();
         }
 
         private void BasketVsetko_Click(object sender, EventArgs e)
         {
-            basketTable.DefaultView.RowFilter = string.Empty;
+            basketFilter = string.Empty;
+            RefreshBasketDisplay();
         }
 
         private void btnSettings_Click(object sender, EventArgs e)
         {
-            //var settingsForm = new Settings(); 
+            //var settingsForm = new Settings();
             //settingsForm.Show();
+        }
+
+        private void BindDatabaseGrid(DataTable source)
+        {
+            var decorated = SectionDividerHelper.BuildWithDividers(source, categoryColumnName);
+            dataGridDatabase.DataSource = decorated;
+            if (dataGridDatabase.Columns.Contains("id"))
+                dataGridDatabase.Columns["id"].Visible = false;
+            if (dataGridDatabase.Columns.Contains("product_type_id"))
+                dataGridDatabase.Columns["product_type_id"].Visible = false;
+            SectionDividerHelper.ApplyDividerStyles(dataGridDatabase, categoryColumnName);
+        }
+
+        private void ConfigureBasketGrid()
+        {
+            dataGridBasket.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridBasket.MultiSelect = false;
+            dataGridBasket.RowHeadersVisible = false;
+            dataGridBasket.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+        }
+
+        private void RefreshBasketDisplay()
+        {
+            DataTable filtered = GetFilteredBasket();
+            basketDisplayTable = SectionDividerHelper.BuildWithDividers(filtered, categoryColumnName);
+            dataGridBasket.DataSource = basketDisplayTable;
+
+            BasketFunctions.HideColumns(dataGridBasket);
+            foreach (DataGridViewColumn col in dataGridBasket.Columns)
+                col.ReadOnly = true;
+
+            string[] editableCols = { "quantity", "koeficient_prace", "cena_prace", "koeficient_material", "nakup_materialu" };
+            foreach (string name in editableCols)
+            {
+                if (dataGridBasket.Columns.Contains(name))
+                    dataGridBasket.Columns[name].ReadOnly = false;
+            }
+            string[] computedCols = { "material_spolu", "praca_spolu", "spolu" };
+            foreach (string name in computedCols)
+            {
+                if (dataGridBasket.Columns.Contains(name))
+                    dataGridBasket.Columns[name].ReadOnly = true;
+            }
+
+            SectionDividerHelper.ApplyDividerStyles(dataGridBasket, categoryColumnName);
+        }
+
+        private DataTable GetFilteredBasket()
+        {
+            if (string.IsNullOrEmpty(basketFilter))
+                return basketTable.Copy();
+
+            DataRow[] rows = basketTable.Select(basketFilter);
+            return rows.Length > 0 ? rows.CopyToDataTable() : basketTable.Clone();
         }
     }
 }
